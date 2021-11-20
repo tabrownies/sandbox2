@@ -20,6 +20,14 @@
 </div>
 
 <div>
+    <h4>
+        Add expenses
+    </h4>
+    <button>Add expense 1</button>
+    <button>Add expense 2</button>
+</div>
+
+<div>
     <table>
         <tr>
             <td>
@@ -40,13 +48,167 @@
                 January
             </td>
             <td>
-                {{incomeBins[0]}}
+                {{monthlyIncomeBins[0]}}
             </td>
             <td>
-                {{expenseBins[0]}}
+                {{monthlyExpenseBins[0]}}
             </td>
             <td>
-                
+                {{monthlySmoothedExpenseBins[0]-monthlySmoothedExpenseBins[0]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                February
+            </td>
+            <td>
+                {{monthlyIncomeBins[1]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[1]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[1]-monthlySmoothedExpenseBins[1]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                March
+            </td>
+            <td>
+                {{monthlyIncomeBins[2]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[2]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[2]-monthlySmoothedExpenseBins[2]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+               April
+            </td>
+            <td>
+                {{monthlyIncomeBins[3]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[3]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[3]-monthlySmoothedExpenseBins[3]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                May
+            </td>
+            <td>
+                {{monthlyIncomeBins[4]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[4]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[4]-monthlySmoothedExpenseBins[4]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                June
+            </td>
+            <td>
+                {{monthlyIncomeBins[5]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[5]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[5]-monthlySmoothedExpenseBins[5]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                July
+            </td>
+            <td>
+                {{monthlyIncomeBins[6]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[6]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[6]-monthlySmoothedExpenseBins[6]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                August
+            </td>
+            <td>
+                {{monthlyIncomeBins[7]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[7]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[7]-monthlySmoothedExpenseBins[7]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                September
+            </td>
+            <td>
+                {{monthlyIncomeBins[8]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[8]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[8]-monthlySmoothedExpenseBins[8]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                October
+            </td>
+            <td>
+                {{monthlyIncomeBins[9]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[9]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[9]-monthlySmoothedExpenseBins[9]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                November
+            </td>
+            <td>
+                {{monthlyIncomeBins[10]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[10]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[10]-monthlySmoothedExpenseBins[10]%1}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                December
+            </td>
+            <td>
+                {{monthlyIncomeBins[11]}}
+            </td>
+            <td>
+                {{monthlyExpenseBins[11]}}
+            </td>
+            <td>
+                {{monthlySmoothedExpenseBins[11]-monthlySmoothedExpenseBins[11]%1}}
             </td>
         </tr>
     </table>

@@ -61,6 +61,7 @@ export class BudgetService {
   incomes: (any)[] = [];
   incomeBins: any[] = [];
   expenseBins:any[] = [];
+  expenseBinsSmoothed:any[] = [];
 
   // this months variables
   essentials = 0
@@ -146,6 +147,7 @@ export class BudgetService {
     for (let i = 0; i < 48; ++i) {
       this.expenseBins.push(0);
       this.incomeBins.push(0);
+      this.expenseBinsSmoothed.push(0);
     }
 
     for (let i = 0; i < this.incomes.length; i++) {
@@ -196,7 +198,7 @@ export class BudgetService {
         }
       }
     }
-
+    console.log(this.expenseBins)
     let funAmount = 0;
     let savingsDeficit = 0;
 
@@ -206,16 +208,18 @@ export class BudgetService {
     // take out mandatory expenses
     for (let i = this.currentWeek; i < incomeBinsAdjusted.length; ++i) {
       incomeBinsAdjusted[i] -= this.monthlyMin / 4;
+      // this.expenseBinsSmoothed[i] +=this.monthlyMin/4
     }
 
     // calculate the amount that needs to be spent each month for the future expenses
     for (let j = this.currentWeek; j < this.expenseBins.length; j++) {
       for (let k = 0; k < j; k++) {
         incomeBinsAdjusted[k] -= this.expenseBins[j] / (j + 1);
+        this.expenseBinsSmoothed[k] += this.expenseBins[j] / (j + 1);
       }
     }
 
-
+    // this.incomeBinsSmoothed = this.incomeBins.map(value=>value);
 
     for (let i = this.currentWeek; i < incomeBinsAdjusted.length; ++i) {
       if (incomeBinsAdjusted[i] < 0) {
@@ -314,6 +318,6 @@ export class BudgetService {
       this.weeklyStats.push(new WeekStat(this.monthlyMin / 4, funAmount, this.amountInSavings, this.amountInEmergency, savingsDeficit))
     }
 
-    console.log(this.weeklyStats);
+    // console.log(this.weeklyStats);
   }
 }

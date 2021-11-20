@@ -15,13 +15,17 @@ export class ExpensesComponent implements OnInit {
   incomes: any[] = [];
   incomeBins: any[] = [];
   expenseBins: any[] = [];
+  monthlyIncomeBins: any[] = [];
+  monthlyExpenseBins: any[] = [];
+  monthlySmoothedExpenseBins: any[] = [];
 
   future_expense_strings: string[] = [];
   // past_expense_strings: string[] = [];
   future_income_strings: string[] = [];
   // past_income_strings: string[] = [];
 
-  adjustedBins: number[] = []
+  expenseBinsSmoothed: number[] = [];
+
 
   constructor(public budgetService: BudgetService) { }
 
@@ -94,6 +98,23 @@ export class ExpensesComponent implements OnInit {
     this.incomes = this.budgetService.incomes;
     this.incomeBins = this.budgetService.incomeBins;
     this.expenseBins = this.budgetService.expenseBins;
+    this.expenseBinsSmoothed = this.budgetService.expenseBinsSmoothed;
+
+    for (let i = 0; i < this.expenseBins.length; i += 4) {
+      let monthExpenseTotal = 0;
+      let monthIncomeTotal = 0;
+      let monthSmoothedExpenseTotal = 0
+      for (let j = 0; j < 4; ++j) {
+        monthExpenseTotal += this.expenseBins[i + j];
+        monthIncomeTotal += this.incomeBins[i + j];
+        monthSmoothedExpenseTotal += this.expenseBinsSmoothed[i + j];
+      }
+      this.monthlyExpenseBins.push(monthExpenseTotal);
+      this.monthlyIncomeBins.push(monthIncomeTotal);
+      this.monthlySmoothedExpenseBins.push(monthSmoothedExpenseTotal);
+    }
+
+
     let expenseString = '';
     for (let expense of this.expenses) {
       if (expense['date'] != null) {
