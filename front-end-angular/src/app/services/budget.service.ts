@@ -59,6 +59,8 @@ export class BudgetService {
   // ins and outs of money
   expenses: (any)[] = [];
   incomes: (any)[] = [];
+  incomeBins: any[] = [];
+  expenseBins:any[] = [];
 
   // this months variables
   essentials = 0
@@ -86,6 +88,7 @@ export class BudgetService {
     this.incomes.push(new RegularIncome('Parents Money', 100, 'monthly', 2));
     this.incomes.push(new RegularIncome('Lottery', 100, 'yearly', 4))
     this.calculateMonth();
+    console.log('constructed');
   }
 
   calculateMonth() {
@@ -138,32 +141,32 @@ export class BudgetService {
   calculateBudget(): void {
     // reset data-member and prep variables
     this.weeklyStats = [];
-    let expenseBins: number[] = [];
-    let incomeBins: number[] = [];
+    this.expenseBins=[];
+    this.incomeBins=[];
     for (let i = 0; i < 48; ++i) {
-      expenseBins.push(0);
-      incomeBins.push(0);
+      this.expenseBins.push(0);
+      this.incomeBins.push(0);
     }
 
     for (let i = 0; i < this.incomes.length; i++) {
       if (this.incomes[i]['date'] != null) {
         // this is a one time income
-        incomeBins[this.incomes[i].date] += this.incomes[i].amount;
+        this.incomeBins[this.incomes[i].date] += this.incomes[i].amount;
       } else {
         switch (this.incomes[i].frequency) {
           case 'weekly':
             for (let j = this.incomes[i].start; j < 48; j++) {
-              incomeBins[j] += this.incomes[i].amount;
+              this.incomeBins[j] += this.incomes[i].amount;
             }
             break;
           case 'monthly':
             for (let j = this.incomes[i].start; j < 48; j += 4) {
-              incomeBins[j] += this.incomes[i].amount
+              this.incomeBins[j] += this.incomes[i].amount
             }
             break;
           case 'yearly':
             for (let j = this.incomes[i].start; j < 48; j += 48) {
-              incomeBins[j] += this.incomes[i].amount
+              this.incomeBins[j] += this.incomes[i].amount
             }
             break;
         }
@@ -172,22 +175,22 @@ export class BudgetService {
     for (let i = 0; i < this.expenses.length; i++) {
       if (this.expenses[i]['date'] != null) {
         // this is a one time income
-        expenseBins[this.expenses[i].date] += this.expenses[i].amount;
+        this.expenseBins[this.expenses[i].date] += this.expenses[i].amount;
       } else {
         switch (this.expenses[i].frequency) {
           case 'weekly':
             for (let j = this.expenses[i].start; j < 48; j++) {
-              expenseBins[j] += this.expenses[i].amount;
+              this.expenseBins[j] += this.expenses[i].amount;
             }
             break;
           case 'monthly':
             for (let j = this.expenses[i].start; j < 48; j += 4) {
-              expenseBins[j] += this.expenses[i].amount
+              this.expenseBins[j] += this.expenses[i].amount
             }
             break;
           case 'yearly':
             for (let j = this.expenses[i].start; j < 48; j += 48) {
-              expenseBins[j] += this.expenses[i].amount
+              this.expenseBins[j] += this.expenses[i].amount
             }
             break;
         }
@@ -198,7 +201,7 @@ export class BudgetService {
     let savingsDeficit = 0;
 
     // deep copy expense bins
-    let incomeBinsAdjusted = incomeBins.map(value => value);
+    let incomeBinsAdjusted = this.incomeBins.map(value => value);
 
     // take out mandatory expenses
     for (let i = this.currentWeek; i < incomeBinsAdjusted.length; ++i) {
@@ -206,9 +209,9 @@ export class BudgetService {
     }
 
     // calculate the amount that needs to be spent each month for the future expenses
-    for (let j = this.currentWeek; j < expenseBins.length; j++) {
+    for (let j = this.currentWeek; j < this.expenseBins.length; j++) {
       for (let k = 0; k < j; k++) {
-        incomeBinsAdjusted[k] -= expenseBins[j] / (j + 1);
+        incomeBinsAdjusted[k] -= this.expenseBins[j] / (j + 1);
       }
     }
 
