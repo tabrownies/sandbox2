@@ -1,0 +1,53 @@
+<h3>
+    Expenses
+</h3>
+<div>
+    <ul>
+        <li *ngFor="let expenseString of future_expense_strings">
+            {{expenseString}}: 
+        </li>
+    </ul>
+</div>
+<h3>
+    Incomes
+</h3>
+<div>
+    <ul>
+        <li *ngFor="let incomeString of future_income_strings">
+            {{incomeString}}: 
+        </li>
+    </ul>
+</div>
+
+<div>
+    <table>
+        <tr>
+            <td>
+                Month
+            </td>
+            <td>
+                Income
+            </td>
+            <td>
+                Expenses
+            </td>
+            <td>
+                Smoothed Expenses
+            </td>
+        </tr>
+        <tr>
+            <td>
+                January
+            </td>
+            <td>
+                {{incomeBins[0]}}
+            </td>
+            <td>
+                {{expenseBins[0]}}
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    </table>
+</div>
