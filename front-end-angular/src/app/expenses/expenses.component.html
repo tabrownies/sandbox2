@@ -43,7 +43,7 @@
                 Smoothed Expenses
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="0>=thisMonth">
             <td>
                 January
             </td>
@@ -57,7 +57,7 @@
                 {{monthlySmoothedExpenseBins[0]-monthlySmoothedExpenseBins[0]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="1>=thisMonth">
             <td>
                 February
             </td>
@@ -71,7 +71,7 @@
                 {{monthlySmoothedExpenseBins[1]-monthlySmoothedExpenseBins[1]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="2>=thisMonth">
             <td>
                 March
             </td>
@@ -85,7 +85,7 @@
                 {{monthlySmoothedExpenseBins[2]-monthlySmoothedExpenseBins[2]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="3>=thisMonth">
             <td>
                April
             </td>
@@ -99,7 +99,7 @@
                 {{monthlySmoothedExpenseBins[3]-monthlySmoothedExpenseBins[3]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="4>=thisMonth">
             <td>
                 May
             </td>
@@ -113,7 +113,7 @@
                 {{monthlySmoothedExpenseBins[4]-monthlySmoothedExpenseBins[4]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="5>=thisMonth">
             <td>
                 June
             </td>
@@ -127,7 +127,7 @@
                 {{monthlySmoothedExpenseBins[5]-monthlySmoothedExpenseBins[5]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="6>=thisMonth">
             <td>
                 July
             </td>
@@ -141,7 +141,7 @@
                 {{monthlySmoothedExpenseBins[6]-monthlySmoothedExpenseBins[6]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="7>=thisMonth">
             <td>
                 August
             </td>
@@ -155,7 +155,7 @@
                 {{monthlySmoothedExpenseBins[7]-monthlySmoothedExpenseBins[7]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="8>=thisMonth">
             <td>
                 September
             </td>
@@ -169,7 +169,7 @@
                 {{monthlySmoothedExpenseBins[8]-monthlySmoothedExpenseBins[8]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="9>=thisMonth">
             <td>
                 October
             </td>
@@ -183,7 +183,7 @@
                 {{monthlySmoothedExpenseBins[9]-monthlySmoothedExpenseBins[9]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="10>=thisMonth">
             <td>
                 November
             </td>
@@ -197,7 +197,7 @@
                 {{monthlySmoothedExpenseBins[10]-monthlySmoothedExpenseBins[10]%1}}
             </td>
         </tr>
-        <tr>
+        <tr *ngIf="11>=thisMonth">
             <td>
                 December
             </td>

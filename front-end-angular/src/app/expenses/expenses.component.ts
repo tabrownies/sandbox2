@@ -58,6 +58,8 @@ export class ExpensesComponent implements OnInit {
   future_income_strings: string[] = [];
   // past_income_strings: string[] = [];
 
+  thisMonth:number = 0;
+
   expenseBinsSmoothed: number[] = [];
 
 
@@ -149,6 +151,8 @@ export class ExpensesComponent implements OnInit {
     this.expenseBins = this.budgetService.expenseBins;
     this.expenseBinsSmoothed = this.budgetService.expenseBinsSmoothed;
     
+    this.thisMonth = Math.floor(this.budgetService.currentWeek/4);
+
     this.monthlyExpenseBins = []
     this.monthlyIncomeBins = []
     this.monthlySmoothedExpenseBins = []

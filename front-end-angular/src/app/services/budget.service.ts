@@ -56,6 +56,8 @@ export class BudgetService {
   savingsGoal = 10000;
   desiredFun = 25;
 
+  startingSavings = 5000; //this is a hack for the presentation parts to work together
+
   // ins and outs of money
   expenses: (any)[] = [];
   incomes: (any)[] = [];
@@ -72,12 +74,17 @@ export class BudgetService {
 
   // the "date" for calculations
 
-  currentWeek = 0;
+  currentWeek =0;
 
   // later add changing date functionality
   constructor() {
     // this.expenses = [];
     // prep fake planned expenses
+    this.currentWeek = 0;
+    this.currentWeek = 1;
+    this.currentWeek = 2;
+    this.currentWeek = 3;
+    this.currentWeek = 20;
     this.expenses.push(new OneTimeExpense('car', 5000, 20));
     this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 11));
     this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 31));
@@ -153,7 +160,7 @@ export class BudgetService {
       this.incomeBins.push(0);
       this.expenseBinsSmoothed.push(0);
     }
-
+    this.amountInSavings = this.startingSavings;
     for (let i = 0; i < this.incomes.length; i++) {
       if (this.incomes[i]['date'] != null) {
         // this is a one time income
@@ -322,7 +329,7 @@ export class BudgetService {
       }
       this.weeklyStats.push(new WeekStat(this.monthlyMin / 4, funAmount, this.amountInSavings, this.amountInEmergency, savingsDeficit))
     }
-    console.log('expense bins after all', this.expenseBins)
+    // console.log('expense bins after all', this.expenseBins)
     // console.log(this.weeklyStats);
   }
 }
