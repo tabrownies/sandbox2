@@ -72,14 +72,17 @@ export class BudgetService {
 
   // the "date" for calculations
 
-  currentWeek = 20;
+  currentWeek = 0;
 
   // later add changing date functionality
   constructor() {
+    // this.expenses = [];
     // prep fake planned expenses
     this.expenses.push(new OneTimeExpense('car', 5000, 20));
     this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 11));
     this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 31));
+    // this.expenses.push(new OneTimeExpense('House', 10000, 0));
+    
 
     this.expenses.push(new RegularExpense('rent', 400, 'monthly'));
     this.expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
@@ -89,7 +92,7 @@ export class BudgetService {
     this.incomes.push(new RegularIncome('Parents Money', 100, 'monthly', 2));
     this.incomes.push(new RegularIncome('Lottery', 100, 'yearly', 4))
     this.calculateMonth();
-    console.log('constructed');
+    // console.log('constructed');
   }
 
   calculateMonth() {
@@ -120,9 +123,9 @@ export class BudgetService {
     // post adjust for being in the middle of the month
     // this.amountInSavings += this.monthlyMin - this.essentials;
     // this.amountInSavings = this.weeklyStats[this.currentWeek].fun / 4 * (weekInMonth);
-
-    console.log(this.essentials, this.fun, this.amountInEmergency, this.amountInSavings)
-    console.log(this.weeklyStats[this.currentWeek]);
+// 
+    // console.log(this.essentials, this.fun, this.amountInEmergency, this.amountInSavings)
+    // console.log(this.weeklyStats[this.currentWeek]);
 
 
   }
@@ -144,6 +147,7 @@ export class BudgetService {
     this.weeklyStats = [];
     this.expenseBins=[];
     this.incomeBins=[];
+    this.expenseBinsSmoothed = [];
     for (let i = 0; i < 48; ++i) {
       this.expenseBins.push(0);
       this.incomeBins.push(0);
@@ -177,6 +181,7 @@ export class BudgetService {
     for (let i = 0; i < this.expenses.length; i++) {
       if (this.expenses[i]['date'] != null) {
         // this is a one time income
+        console.log('push one time expense')
         this.expenseBins[this.expenses[i].date] += this.expenses[i].amount;
       } else {
         switch (this.expenses[i].frequency) {
@@ -198,7 +203,7 @@ export class BudgetService {
         }
       }
     }
-    console.log(this.expenseBins)
+    console.log('expense bins after fill', this.expenseBins)
     let funAmount = 0;
     let savingsDeficit = 0;
 
@@ -317,7 +322,7 @@ export class BudgetService {
       }
       this.weeklyStats.push(new WeekStat(this.monthlyMin / 4, funAmount, this.amountInSavings, this.amountInEmergency, savingsDeficit))
     }
-
+    console.log('expense bins after all', this.expenseBins)
     // console.log(this.weeklyStats);
   }
 }

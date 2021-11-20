@@ -3,6 +3,40 @@ import { Component, OnInit } from '@angular/core';
 
 import { BudgetService } from '../services/budget.service';
 
+class OneTimeExpense {
+  constructor(public title: string, public amount: number, public date: number) {
+    this.title = title;
+    this.amount = amount;
+    this.date = date;
+  }
+}
+
+class RegularExpense {
+  constructor(public title: string, public amount: number, public frequency: string, public start = 0) {
+    this.title = title;
+    this.amount = amount;
+    this.frequency = frequency;
+    this.start = start;
+  }
+}
+
+class OneTimeIncome {
+  constructor(public title: string, public amount: number, public date: number) {
+    this.title = title;
+    this.amount = amount;
+    this.date = date;
+  }
+}
+
+class RegularIncome {
+  constructor(public title: string, public amount: number, public frequency: string, public start = 0) {
+    this.title = title;
+    this.amount = amount;
+    this.frequency = frequency;
+    this.start = start;
+  }
+}
+
 @Component({
   selector: 'app-expenses',
   templateUrl: './expenses.component.html',
@@ -30,6 +64,20 @@ export class ExpensesComponent implements OnInit {
   constructor(public budgetService: BudgetService) { }
 
   ngOnInit(): void {
+    this.calculate();
+  }
+
+  addExampleExpense(){
+    console.log(this.budgetService.expenses)
+    this.budgetService.expenses.push(new RegularExpense('House Payment', 1000, 'yearly', 5));
+    // this.budgetService.calculateBudget()
+    this.budgetService.calculateMonth();
+    this.calculate();
+    console.log(this.budgetService.expenses);
+  }
+  addExampleIncome(){
+    this.budgetService.addIncome(new OneTimeIncome('Money Ball',1000000,13));
+    this.budgetService.calculateMonth();
     this.calculate();
   }
 
@@ -95,11 +143,17 @@ export class ExpensesComponent implements OnInit {
   calculate() {
     this.weeklyStats = this.budgetService.weeklyStats;
     this.expenses = this.budgetService.expenses;
+    console.log('in calculate this.expenses', this.expenses)
     this.incomes = this.budgetService.incomes;
     this.incomeBins = this.budgetService.incomeBins;
     this.expenseBins = this.budgetService.expenseBins;
     this.expenseBinsSmoothed = this.budgetService.expenseBinsSmoothed;
-
+    
+    this.monthlyExpenseBins = []
+    this.monthlyIncomeBins = []
+    this.monthlySmoothedExpenseBins = []
+    this.future_expense_strings = [];
+    this.future_income_strings = [];
     for (let i = 0; i < this.expenseBins.length; i += 4) {
       let monthExpenseTotal = 0;
       let monthIncomeTotal = 0;
@@ -108,13 +162,15 @@ export class ExpensesComponent implements OnInit {
         monthExpenseTotal += this.expenseBins[i + j];
         monthIncomeTotal += this.incomeBins[i + j];
         monthSmoothedExpenseTotal += this.expenseBinsSmoothed[i + j];
+        console.log(this.expenseBinsSmoothed[i+j])
       }
+      console.log('smoothed')
       this.monthlyExpenseBins.push(monthExpenseTotal);
       this.monthlyIncomeBins.push(monthIncomeTotal);
       this.monthlySmoothedExpenseBins.push(monthSmoothedExpenseTotal);
     }
 
-
+    // console.log('now',this.future_expense_strings)
     let expenseString = '';
     for (let expense of this.expenses) {
       if (expense['date'] != null) {
@@ -123,8 +179,10 @@ export class ExpensesComponent implements OnInit {
       else {
         expenseString = `${expense.title}: ${expense.amount} ${expense.frequency} starting on ${this.formatDate(expense.start)}`
       }
+      console.log(expenseString)
       this.future_expense_strings.push(expenseString);
     }
+    // console.log(this.future_expense_strings)
 
     let incomeString = '';
     for (let income of this.incomes) {
