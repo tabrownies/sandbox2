@@ -12,7 +12,7 @@ let desiredFun = 100;
 
 let today = 12;
 
-
+savingsDeficit = 0;
 
 class OneTimeExpense {
     constructor(title, amount, date) {
@@ -56,12 +56,12 @@ let incomes = [];
 // expenses.push
 
 // prep fake planned expenses
-expenses.push(new OneTimeExpense('car', 5000, 20));
+// expenses.push(new OneTimeExpense('car', 5000, 20));
 // expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
 // expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
 
 expenses.push(new RegularExpense('rent', 400, 'monthly'));
-expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
+// expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
 
 incomes.push(new OneTimeIncome('Summer Sales', 30000, 28));
 incomes.push(new RegularIncome('TA job', 200, 'weekly'));
@@ -140,9 +140,12 @@ class WeekVars {
     }
 }
 
+funAmount = 0;
+
 // copy expense bins
 let incomeBinsAdjusted = incomeBins.map(value => value);
 
+// take out mandatory expenses
 for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
     incomeBinsAdjusted[i] -= monthlyMin/4;
 }
@@ -152,11 +155,45 @@ for (let j = 0; j < expenseBins.length; j++) {
         incomeBinsAdjusted[k]-=expenseBins[j]/(j+1);
     }
 }
+// compensate with savings, replenish savings, and then take out for rainy day and savings
+for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+    if(incomeBinsAdjusted[i]<0){
+        amountInSavings += incomeBinsAdjusted[i];
+        savingsDeficit-=incomeBinsAdjusted[i];
+    }
+    else{
+        if(incomeBinsAdjusted[i]<savingsDeficit){
+            amountInSavings+=incomeBinsAdjusted[i];
+            savingsDeficit-=incomeBinsAdjusted[i];   
+        }
+        else{
+            incomeBinsAdjusted[i]+=savingsDeficit;
+            amountInSavings+=savingsDeficit;
+            savingsDeficit=0;
+            if(incomeBinsAdjusted[i]>amountTowardsEmergency){
+                amountInEmergency+=amountTowardsEmergency;
+                incomeBinsAdjusted[i]-=amountInEmergency;
+            }
+            if(incomeBinsAdjusted[i]>amountTowardsSavings){
+                amountInSavings+=amountTowardsSavings;
+                incomeBinsAdjusted[i]-=amountInSavings;
+            }
+            if(incomeBinsAdjusted[i]>0){
+
+                console.log(incomeBinsAdjusted[i]);
+            }
+        }
+        
+        
+    }
+    console.log(amountInSavings,-savingsDeficit)
+}
 
 for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
-    console.log(incomeBins[i], expenseBins[i],incomeBinsAdjusted[i]);
-
+    // console.log(incomeBins[i], expenseBins[i],incomeBinsAdjusted[i]);
 }
+
+
 
 
 // console.log(expenseBins)
