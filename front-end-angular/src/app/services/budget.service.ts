@@ -147,12 +147,12 @@ export class BudgetService {
     let incomeBinsAdjusted = incomeBins.map(value => value);
 
     // take out mandatory expenses
-    for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+    for (let i = this.currentWeek; i < incomeBinsAdjusted.length; ++i) {
       incomeBinsAdjusted[i] -= this.monthlyMin / 4;
     }
 
     // calculate the amount that needs to be spent each month for the future expenses
-    for (let j = 0; j < expenseBins.length; j++) {
+    for (let j = this.currentWeek; j < expenseBins.length; j++) {
       for (let k = 0; k < j; k++) {
         incomeBinsAdjusted[k] -= expenseBins[j] / (j + 1);
       }
@@ -160,7 +160,7 @@ export class BudgetService {
 
 
 
-    for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+    for (let i = this.currentWeek; i < incomeBinsAdjusted.length; ++i) {
       if (incomeBinsAdjusted[i] < 0) {
         // pull from savings
         this.amountInSavings += incomeBinsAdjusted[i]; // this is negative

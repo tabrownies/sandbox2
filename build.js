@@ -11,7 +11,7 @@ let savingsGoal = 10000;
 
 let desiredFun = 100;
 
-let today = 12;
+let today = 20;
 
 savingsDeficit = 0;
 
@@ -153,13 +153,13 @@ funAmount = 0;
 let incomeBinsAdjusted = incomeBins.map(value => value);
 
 // take out mandatory expenses
-for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+for (let i = today; i < incomeBinsAdjusted.length; ++i) {
     incomeBinsAdjusted[i] -= monthlyMin / 4;
     // weeklyStats[i].budget = monthlyMin / 4;
 }
 
 // calculate the amount that needs to be spent each month for the future expenses
-for (let j = 0; j < expenseBins.length; j++) {
+for (let j = today; j < expenseBins.length; j++) {
     for (let k = 0; k < j; k++) {
         incomeBinsAdjusted[k] -= expenseBins[j] / (j + 1);
     }
@@ -169,7 +169,7 @@ for (let j = 0; j < expenseBins.length; j++) {
 // weeklyStats[0].savings = amountInSavings
 
 // compensate with savings, replenish savings, and then take out for rainy day and savings
-for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+for (let i = today; i < incomeBinsAdjusted.length; ++i) {
     if (incomeBinsAdjusted[i] < 0) {
         // pull from savings
         amountInSavings += incomeBinsAdjusted[i]; // this is negative
