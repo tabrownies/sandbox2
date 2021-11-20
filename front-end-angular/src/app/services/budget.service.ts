@@ -61,20 +61,50 @@ export class BudgetService {
   // this months variables
   essentials = 0
   fun = 0
-  emergency = 0
-  savings = 0
 
   // future plan
   weeklyStats: WeekStat[] = [];
 
   // the "date" for calculations
 
-  currentWeek = 10;
+  currentWeek = 5;
 
   // later add changing date functionality
   constructor() {
-    this.calculateBudget();
+    this.calculateMonth();
   }
+
+  calculateMonth() {
+    // put back in savings all the money set aside. This is a bit of a bug that needs to be fixed eventually
+    this.amountInSavings += this.essentials;
+    this.amountInSavings += this.fun;
+
+    this.calculateBudget();
+    // calculate week and week in the month
+    let month = Math.floor(this.currentWeek / 4);
+    let weekInMonth = this.currentWeek % 4;
+    // console.log(weekInMonth)
+
+    // address being in the middle of the month
+    for (let i = this.currentWeek; i < this.currentWeek + (4 - weekInMonth); ++i) {
+      this.essentials += this.weeklyStats[i].budget;
+      this.fun += this.weeklyStats[i].fun;
+    }
+
+    // this.essentials = this.monthlyMin / 4 * (4 - weekInMonth);
+    // this.fun = this.weeklyStats[this.currentWeek].fun / 4 * (4 - weekInMonth);
+
+    this.amountInSavings = this.weeklyStats[this.currentWeek].savings;
+
+    this.amountInEmergency = this.weeklyStats[this.currentWeek].emergency;
+
+    // post adjust for being in the middle of the month
+    // this.amountInSavings += this.monthlyMin - this.essentials;
+    // this.amountInSavings = this.weeklyStats[this.currentWeek].fun / 4 * (weekInMonth);
+  }
+
+
+
   addExpense(expense: OneTimeExpense | RegularExpense): void {
     this.expenses.push(expense);
   }
@@ -82,7 +112,7 @@ export class BudgetService {
     this.incomes.push(income);
   }
   calculateBudget(): void {
-    // reset datamember and prep variables
+    // reset data-member and prep variables
     this.weeklyStats = [];
     let expenseBins: number[] = [];
     let incomeBins: number[] = [];
