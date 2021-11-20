@@ -57,8 +57,8 @@ let incomes = [];
 
 // prep fake planned expenses
 expenses.push(new OneTimeExpense('car', 5000, 20));
-expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
-expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
+// expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
+// expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
 
 expenses.push(new RegularExpense('rent', 400, 'monthly'));
 expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
@@ -141,8 +141,23 @@ class WeekVars {
 }
 
 // copy expense bins
-let expenseBinsAdjusted = expenseBins.map(value => value);
+let incomeBinsAdjusted = incomeBins.map(value => value);
 
-for (let i = 0; i < expenseBins.length; ++i) {
+for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+    incomeBinsAdjusted[i] -= monthlyMin/4;
+}
+
+for (let j = 0; j < expenseBins.length; j++) {
+    for(let k = 0; k < j; k++){
+        incomeBinsAdjusted[k]-=expenseBins[j]/(j+1);
+    }
+}
+
+for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
+    console.log(incomeBins[i], expenseBins[i],incomeBinsAdjusted[i]);
 
 }
+
+
+// console.log(expenseBins)
+// console.log(incomeBinsAdjusted);
