@@ -7,6 +7,7 @@ let amountTowardsSavings = 300;
 let monthlyMin = 400;
 
 let emergencyGoal = 1000;
+let savingsGoal = 10000;
 
 let desiredFun = 100;
 
@@ -56,12 +57,12 @@ let incomes = [];
 // expenses.push
 
 // prep fake planned expenses
-// expenses.push(new OneTimeExpense('car', 5000, 20));
-// expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
-// expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
+expenses.push(new OneTimeExpense('car', 5000, 20));
+expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
+expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
 
 expenses.push(new RegularExpense('rent', 400, 'monthly'));
-// expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
+expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
 
 incomes.push(new OneTimeIncome('Summer Sales', 30000, 28));
 incomes.push(new RegularIncome('TA job', 200, 'weekly'));
@@ -73,11 +74,24 @@ incomes.push(new RegularIncome('Lottery', 100, 'yearly', 4))
 let expenseBins = [];
 let incomeBins = [];
 let moneyLeftBin = []
+let weeklyStats = [];
+
+class WeekVars {
+    constructor(budget = 0, fun = 0, savings = 0, emergency = 0, savingsDeficit = 0, emergencyDeficit = 0) {
+        this.budget = budget;
+        this.fun = fun;
+        this.savings = savings;
+        this.emergency = emergency;
+        this.savingsDeficit = savingsDeficit;
+        this.emergencyDeficit = emergencyDeficit;
+    }
+}
 
 for (let i = 0; i < 48; ++i) {
     expenseBins.push(0);
     incomeBins.push(0);
     moneyLeftBin.push(0);
+    weeklyStats.push(new WeekVars());
 }
 
 for (let i = 0; i < incomes.length; i++) {
@@ -131,62 +145,121 @@ for (let i = 0; i < expenses.length; i++) {
     }
 }
 
-class WeekVars {
-    constructor(savings, emergency, savingsDeficit = 0, emergencyDeficit = 0) {
-        this.savings = savings;
-        this.emergency = emergency;
-        this.savingsDeficit = savingsDeficit;
-        this.emergencyDeficit = emergencyDeficit;
-    }
-}
+
 
 funAmount = 0;
 
-// copy expense bins
+// deep copy expense bins
 let incomeBinsAdjusted = incomeBins.map(value => value);
 
 // take out mandatory expenses
 for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
-    incomeBinsAdjusted[i] -= monthlyMin/4;
+    incomeBinsAdjusted[i] -= monthlyMin / 4;
+    weeklyStats[i].budget = monthlyMin / 4;
 }
 
+// calculate the amount that needs to be spent each month for the future expenses
 for (let j = 0; j < expenseBins.length; j++) {
-    for(let k = 0; k < j; k++){
-        incomeBinsAdjusted[k]-=expenseBins[j]/(j+1);
+    for (let k = 0; k < j; k++) {
+        incomeBinsAdjusted[k] -= expenseBins[j] / (j + 1);
     }
 }
+
+weeklyStats[0].emergency = amountInEmergency
+weeklyStats[0].savings = amountInSavings
+
 // compensate with savings, replenish savings, and then take out for rainy day and savings
 for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
-    if(incomeBinsAdjusted[i]<0){
-        amountInSavings += incomeBinsAdjusted[i];
-        savingsDeficit-=incomeBinsAdjusted[i];
+    if (incomeBinsAdjusted[i] < 0) {
+        // pull from savings
+        amountInSavings += incomeBinsAdjusted[i]; // this is negative
+        savingsDeficit -= incomeBinsAdjusted[i];
+        // console.log(incomeBinsAdjusted[i]);
+        incomeBinsAdjusted[i] = 0;
     }
-    else{
-        if(incomeBinsAdjusted[i]<savingsDeficit){
-            amountInSavings+=incomeBinsAdjusted[i];
-            savingsDeficit-=incomeBinsAdjusted[i];   
+    // don't pull from savings
+    else {
+        // fix the deficit
+        if (incomeBinsAdjusted[i] < savingsDeficit) {
+            // if there is less left than the deficit add all back to the amount in savings and reduce the deficit
+            amountInSavings += incomeBinsAdjusted[i];
+            savingsDeficit -= incomeBinsAdjusted[i];
+            incomeBinsAdjusted[i] = 0;
+        } else {
+            // completely reduce the savings deficit
+            incomeBinsAdjusted[i] -= savingsDeficit;
+            amountInSavings += savingsDeficit;
+            savingsDeficit = 0;
         }
-        else{
-            incomeBinsAdjusted[i]+=savingsDeficit;
-            amountInSavings+=savingsDeficit;
-            savingsDeficit=0;
-            if(incomeBinsAdjusted[i]>amountTowardsEmergency){
-                amountInEmergency+=amountTowardsEmergency;
-                incomeBinsAdjusted[i]-=amountInEmergency;
-            }
-            if(incomeBinsAdjusted[i]>amountTowardsSavings){
-                amountInSavings+=amountTowardsSavings;
-                incomeBinsAdjusted[i]-=amountInSavings;
-            }
-            if(incomeBinsAdjusted[i]>0){
 
-                console.log(incomeBinsAdjusted[i]);
+        // move money towards emergency
+        if (incomeBinsAdjusted[i] > amountTowardsEmergency) {
+            // if there is more money left than emergency, put the full amount towards emergency
+            amountInEmergency += amountTowardsEmergency;
+            incomeBinsAdjusted[i] -= amountTowardsEmergency;
+        } else {
+            // if there is less
+            amountInEmergency += incomeBinsAdjusted[i];
+            incomeBinsAdjusted[i] = 0;
+        }
+
+        // move money towards fun if needed
+        if (funAmount < desiredFun) {
+            // we need to move money into fun
+            amountToMove = desiredFun - funAmount //the amount I want to move
+            if (amountToMove < incomeBinsAdjusted[i]) {
+                // there's more left than it needed to 'have fun'
+                funAmount += amountToMove;
+                incomeBinsAdjusted[i] -= amountToMove;
+
+            } else {
+                // use all the rest of the money for fun
+                funAmount += incomeBinsAdjusted[i];
+                incomeBinsAdjusted[i] = 0;
             }
         }
-        
-        
+
+        // put the rest to savings
+        amountInSavings += incomeBinsAdjusted[i];
+        incomeBinsAdjusted[i] = 0
+
+        // pull from savings if above goal for fun and rainy day
+        // if (amountInSavings > savingsGoal) {
+        //     let excessSavings = amountInSavings - savingsGoal; // the extra money in savings that will be put to other uses
+
+        //     // if there isn't enough in fun
+        //     if (funAmount < desiredFun) {
+        //         // we need to move money into fun
+        //         amountToMove = desiredFun - funAmount //the amount I want to move
+        //         if (amountToMove < excessSavings) {
+        //             // there's more left than it needed to 'have fun'
+        //             funAmount += amountToMove;
+        //             amountInSavings -= amountToMove;
+        //             excessSavings -= amountToMove
+        //         } else {
+        //             // use all the rest of the money for fun
+        //             funAmount += excessSavings;
+        //             amountInSavings - excessSavings;
+        //             excessSavings = 0;
+        //         }
+        //     }
+
+        //     // move money towards emergency
+        //     if (excessSavings > amountTowardsEmergency) {
+        //         // if there is more money left than emergency, put the full amount towards emergency
+        //         amountInEmergency += amountTowardsEmergency;
+        //         excessSavings -= amountTowardsEmergency;
+        //         amountInSavings -= amountInEmergency;
+        //     } else {
+        //         // if there is less
+        //         amountInEmergency += excessSavings;
+        //         amountInSavings-=excessSavings;
+        //         excessSavings = 0;
+        //     }
+        // }
+
     }
-    console.log(amountInSavings,-savingsDeficit)
+    console.log(amountInSavings);
 }
 
 for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
