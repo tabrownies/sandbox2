@@ -123,7 +123,11 @@ export class BudgetService {
 
   }
 
-
+  adjust_amount(essentials:number = 0, fun:number = 0, emergency:number=0){
+    this.essentials+=essentials;
+    this.fun+=fun;
+    this.amountInEmergency+=emergency
+  }
 
   addExpense(expense: OneTimeExpense | RegularExpense): void {
     this.expenses.push(expense);

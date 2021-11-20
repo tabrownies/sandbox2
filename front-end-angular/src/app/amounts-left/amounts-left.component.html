@@ -1,3 +1,10 @@
 Essentials: {{essentials}}
 Fun: {{fun}}
 Emergency: {{emergency}}
+
+<div>
+  <input type="number" [(ngModel)]="adjustAmount">
+  <button (click)="adjust('essentials')">To Essentials</button>
+  <button (click)="adjust('fun')">To Fun</button>
+  <button (click)="adjust('emergency')">To Emergency</button>
+</div>
