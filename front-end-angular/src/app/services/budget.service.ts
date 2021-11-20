@@ -39,20 +39,22 @@ class RegularIncome {
   }
 }
 
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class BudgetService {
 
   // variables for monthly planning
-  amountInSavings = 5000;
+  amountInSavings = 5000; //this does not include amount in emergency fun or budget
   amountInEmergency = 350;
   amountTowardsEmergency = 50;
   amountTowardsSavings = 300;
   monthlyMin = 400;
   emergencyGoal = 1000;
   savingsGoal = 10000;
-  desiredFun = 100;
+  desiredFun = 25;
 
   // ins and outs of money
   expenses: (any)[] = [];
@@ -67,18 +69,31 @@ export class BudgetService {
 
   // the "date" for calculations
 
-  currentWeek = 5;
+  currentWeek = 20;
 
   // later add changing date functionality
   constructor() {
+    // prep fake planned expenses
+    this.expenses.push(new OneTimeExpense('car', 5000, 20));
+    this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 11));
+    this.expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 31));
+
+    this.expenses.push(new RegularExpense('rent', 400, 'monthly'));
+    this.expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
+
+    this.incomes.push(new OneTimeIncome('Summer Sales', 30000, 28));
+    this.incomes.push(new RegularIncome('TA job', 200, 'weekly'));
+    this.incomes.push(new RegularIncome('Parents Money', 100, 'monthly', 2));
+    this.incomes.push(new RegularIncome('Lottery', 100, 'yearly', 4))
     this.calculateMonth();
   }
 
   calculateMonth() {
     // put back in savings all the money set aside. This is a bit of a bug that needs to be fixed eventually
-    this.amountInSavings += this.essentials;
-    this.amountInSavings += this.fun;
-
+    // this.amountInSavings += this.essentials;
+    // this.amountInSavings += this.fun;
+    this.essentials = 0;
+    this.fun = 0;
     this.calculateBudget();
     // calculate week and week in the month
     let month = Math.floor(this.currentWeek / 4);
@@ -101,6 +116,11 @@ export class BudgetService {
     // post adjust for being in the middle of the month
     // this.amountInSavings += this.monthlyMin - this.essentials;
     // this.amountInSavings = this.weeklyStats[this.currentWeek].fun / 4 * (weekInMonth);
+
+    console.log(this.essentials, this.fun, this.amountInEmergency, this.amountInSavings)
+    console.log(this.weeklyStats[this.currentWeek]);
+
+
   }
 
 

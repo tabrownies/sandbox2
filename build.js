@@ -9,9 +9,9 @@ let monthlyMin = 400;
 let emergencyGoal = 1000;
 let savingsGoal = 10000;
 
-let desiredFun = 100;
+let desiredFun = 25;
 
-let today = 20;
+let today = 0;
 
 savingsDeficit = 0;
 
@@ -58,8 +58,8 @@ let incomes = [];
 
 // prep fake planned expenses
 expenses.push(new OneTimeExpense('car', 5000, 20));
-expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 11));
-expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 0, 31));
+expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 11));
+expenses.push(new RegularExpense('Tuition', 4000, 'yearly', 31));
 
 expenses.push(new RegularExpense('rent', 400, 'monthly'));
 expenses.push(new RegularExpense('car payment', 300, 'monthly', 20));
@@ -266,9 +266,9 @@ for (let i = today; i < incomeBinsAdjusted.length; ++i) {
     weeklyStats.push(new WeekVars(monthlyMin/4,funAmount,amountInSavings,amountInEmergency,savingsDeficit))
 }
 
-console.log(weeklyStats);
-for (let i = 0; i < incomeBinsAdjusted.length; ++i) {
-    // console.log(incomeBins[i], expenseBins[i],incomeBinsAdjusted[i]);
+// console.log(weeklyStats);
+for (let i = 0; i < weeklyStats.length; ++i) {
+    console.log(i+today, expenseBins[i]);
 }
 
 
